@@ -2,10 +2,13 @@
 Utility functions to convert between protobuf binary format and proto3 XML format.
 
 ## Start
->> cd codebase
->> git clone https://github.com/protocolbuffers/protobuf.git
->> cd ..
->> git clone git@github.com:williammuji/pb_xml_util.git
->> cd ..
->> cp -R pb_xml_util/* protobuf/
->> bazel build :all
+```console
+foo@bar:~$ cd ~/codebase 
+foo@bar:~$ git clone https://github.com/protocolbuffers/protobuf.git 
+foo@bar:~$ cd .. 
+foo@bar:~$ git clone git@github.com:williammuji/pb_xml_util.git 
+foo@bar:~$ cd .. 
+foo@bar:~$ cp -R pb_xml_util/* protobuf/ 
+foo@bar:~$ cd protobuf 
+foo@bar:~$ bazel build :all 
+```
