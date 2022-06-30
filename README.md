@@ -25,7 +25,7 @@ foo@bar:~$ bazel-bin/list_people_cpp address_book
   </people>
   <people name="will" id="10463" email="will@gmail.com">
    <_list_phones>
-    <phones number="18917012112"></phones>
+    <phones number="18917013609"></phones>
    </_list_phones>
   </people>
   <people name="nono" id="58" email="nono@gmail.com"></people>
@@ -46,7 +46,7 @@ people {
   id: 10463
   email: "will@gmail.com"
   phones {
-    number: "18917012112"
+    number: "18917013609"
   }
 }
 people {
