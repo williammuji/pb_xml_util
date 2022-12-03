@@ -611,7 +611,7 @@ util::Status XmlStreamParser::ParseAttrValue(TokenType type) {
 }
 
 util::Status XmlStreamParser::ParseComments() {
-  if (p_.length() < 2) {
+  if (p_.length() < 3) {
     if (!finishing_) {
       return util::CancelledError("");
     }
@@ -619,12 +619,12 @@ util::Status XmlStreamParser::ParseComments() {
   }
 
   const char* data = p_.data();
-  if (data[0] != '-' || data[1] != '-') {
+  if (data[1] != '-' || data[2] != '-') {
     return ReportFailure("Dash expected in comment.",
                          ParseErrorType::EXPECTED_DASH_IN_COMMENT);
   } else {
     // We handled two characters, so advance past them and continue.
-    p_.remove_prefix(2);
+    p_.remove_prefix(3);
   }
 
   while (!p_.empty()) {
@@ -637,12 +637,12 @@ util::Status XmlStreamParser::ParseComments() {
         return ReportFailure("Illegal close comment.",
                              ParseErrorType::ILLEGAL_CLOSE_COMMENT);
       }
-      if (data[1] != '-' || data[2] != '>') {
-        return ReportFailure("Illegal close comment.",
-                             ParseErrorType::ILLEGAL_CLOSE_COMMENT);
-      } else {
+      if (data[1] == '-' && data[2] != '>') {
         p_.remove_prefix(3);
+        stack_.push(BEGIN_ELEMENT);
         return util::Status();
+      } else {
+        Advance();
       }
     } else {
       // Normal character, just advance past it.
@@ -689,6 +689,7 @@ util::Status XmlStreamParser::ParseDeclaration() {
                              ParseErrorType::ILLEGAL_CLOSE_DECLARATION);
       } else {
         p_.remove_prefix(2);
+        stack_.push(BEGIN_ELEMENT);
         return util::Status();
       }
     } else {
@@ -1085,7 +1086,7 @@ XmlStreamParser::TokenType XmlStreamParser::GetNextTokenType(ParseType type) {
   if (*data == '/') return END_TAG_SLASH;
   if (*data == '?') return DECLARATION;
   if (*data == '!') return COMMENT;
-  if (*data == ' ') return ATTR_SEPARATOR;
+  if (ascii_isspace(*data)) return ATTR_SEPARATOR;
   if (*data == '=') return ATTR_VALUE_SEPARATOR;
   if (MatchKey(p_)) {
     return BEGIN_KEY;
